@@ -1,26 +1,39 @@
 <template>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-        <input type="checkbox" v-on:change="onChange" v-bind:checked="prop.done"
-        >
-        <span v-bind:style="prop.done === true ? checkedStyle : checkedStyleNone"
-              v-bind:title="prop.descript"
-              v-on:click="onModal"
-        >
-                    {{ prop.name }}
-    </span>
-        <div class="starRole" v-on:click="onStar">
+    <tr>
+        <td>
+            <input type="checkbox" v-on:change="onChange" v-bind:checked="prop.done"
+            >
+        </td>
+        <td>
+            <span v-bind:style="prop.done === true ? checkedStyle : checkedStyleNone"
+                  v-bind:title="prop.descript"
+                  v-on:click="onModal"
+            >
+                {{   prop.name   }}
+            </span>
+        </td>
+        <td>
+            <Star v-bind:star="prop.star"
+                  v-on:click="starAdd($event)"
+            ></Star>
+        </td>
+        <td>
+            <i class="fas fa-trash-alt" v-on:click="onDelete"
+            ></i>
+        </td>
 
-
-        </div>
-        <i class="fas fa-trash-alt" v-on:click="onDelete"
-        ></i>
-    </li>
+    </tr>
 </template>
 
 <script>
 import {bus} from '../main'
+import Star from '../components/stars'
 
 export default {
+    name: 'TodoItem',
+    components: {
+        Star
+    },
     props: ["prop"],
     data() {
         return {
@@ -55,6 +68,9 @@ export default {
         //     }
         // }
     },
+    beforeUpdate() {
+        console.log('before update');
+    },
     methods: {
 
         onChange: function () {
@@ -73,23 +89,10 @@ export default {
                     data: this.prop,
                     btn: 'Edit'
                 })
-
         },
-        onStar($event) {
-            console.log($event.target, ' - ');
-            // $event.target.style.color = 'red';
-            // let index = arr.indexOf($event.target);
-            // if(this.prop.star !== '') {
-            // 	for(let i = 0; i <= arr.length; ++i){
-            // 		if(i <= index) {
-            // 			console.log(arr[i].innerHTML, '  -arr[i] < index');
-            // 			arr[i].style.backgroundColor = 'red'
-            // 		} else {
-            // 			console.log(arr[i].innerHTML, '  -arr[i] > index');
-            // 			arr[i].style.backgroundColor = 'white'
-            // 		}
-            // 	}
-            // }
+        starAdd($event) {
+            console.log($event, '  - event in todo-item');
+            this.$emit('star', $event)
         }
     }
 }

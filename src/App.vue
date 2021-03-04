@@ -42,23 +42,41 @@
         <hr>
 
         <h1>LIST my wish</h1>
-        <ul class="list-group">
-            <template v-if="selected === ''">
-                <p>RENDER TODO</p>
-                <TodoItem v-for="(item) in todo" v-bind:prop="item" v-bind:key="item.id"
-                          v-on:change="onChange(item.id, $event)" v-on:delete="onDelete(item.id)"
-                          v-on:modal="onModal(item)">
-                </TodoItem>
-            </template>
-            <template v-else>
-                <p>RENDER FITERED</p>
-                <TodoItem v-for="(item) in filtredArr" v-bind:prop="item" v-bind:key="item.id"
-                          v-on:change="onChange(item.id, $event)" v-on:delete="onDelete(item.id)"
-                          v-on:modal="onModal(item)">
-                </TodoItem>
-            </template>
-
-        </ul>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Importance</th>
+                    <th scope="col"> </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-if="selected === ''">
+                    <TodoItem v-for="(item) in todo"
+                              v-bind:prop="item"
+                               v-bind:key="item.id"
+                              v-on:change="onChange(item.id, $event)"
+                              v-on:delete="onDelete(item.id)"
+                              v-on:modal="onModal(item)"
+                              v-on:star="onStar(item.id, $event)"
+                    >
+                    </TodoItem>
+                </template>
+                <template v-else>
+                    <p>RENDER FITERED</p>
+                    <TodoItem v-for="(item) in filtredArr"
+                              v-bind:prop="item"
+                              v-bind:key="item.id"
+                              v-on:change="onChange(item.id, $event)"
+                              v-on:delete="onDelete(item.id)"
+                              v-on:modal="onModal(item)"
+                              v-on:star="onStar(item.id, $event)"
+                    >
+                    </TodoItem>
+                </template>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -81,7 +99,7 @@ export default {
                     name: "JavaScript",
                     descript: "Its a good idea, I am going to read book Devid Flenegan",
                     done: false,
-                    star: 3
+                    star: ''
                 },
 
                 {
@@ -89,7 +107,7 @@ export default {
                     name: "Css",
                     descript: "David Soyer CSS3, recently I've bought one",
                     done: true,
-                    star: 2
+                    star: ''
                 },
                 {
                     id: 3,
@@ -109,6 +127,14 @@ export default {
             selected: '',
             modal: ''
         }
+    },
+    beforeMount() {
+        this.todo.forEach(item => {
+            if(item.star !== ''){
+                console.log('must be filtered MOUNTED');
+            }
+        });
+        console.log('before mount');
     },
     computed: {
         filtredArr: function () {
@@ -210,7 +236,30 @@ export default {
                 let {id, name, descript} = this.todo[index];
                 this.modal = {id: id, name: name, descript: descript, btn: 'Edit'};
             }
+        },
+        onStar: function (id, $event) {
+            console.log(id, ' - id in App');
+            console.log($event, ' - event in App');
+
+            let star = $event.index + 1;
+            console.log(star, ' - star in App');
+            // this.todo[id].star = star;
+            let idx = this.todo.findIndex(i => {
+                return i.id === id
+            });
+            console.log(idx, ' - idx in App');
+            console.log(this.todo[idx].id, ' - todo[idx].id in App');
+            this.todo[idx].star = star;
+            let newData = this.todo.sort((a, b) => {
+                if(a.star > b.star) {
+                    return -1
+                } else {
+                    return 1
+                }
+            });
+            this.todo = newData;
         }
+
     }
 }
 </script>
