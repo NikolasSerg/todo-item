@@ -55,22 +55,6 @@ export default {
     created() {
 
     },
-    mounted() {
-        // console.log(this.prop.star, '  - prop star');
-        // let arrStar = [...document.querySelectorAll('.starRole i')];
-        // console.log(arrStar.length, ' - arrStar');
-        // if (this.prop.star !== '') {
-        // for (let i = 0; i <= arrStar.length; i++) {
-        //         console.log('!!!');
-        //         // if (i < this.prop.star) {
-        //         //     this.arrStar[i].classList.add('starRoleActive')
-        //         // }
-        //     }
-        // }
-    },
-    beforeUpdate() {
-        console.log('before update');
-    },
     methods: {
 
         onChange: function () {
@@ -82,7 +66,6 @@ export default {
             this.$emit('delete');
         },
         onModal: function () {
-            console.log('SPAN click');
             this.$emit('modal');
             bus.$emit('editDisabled',
                 {
@@ -91,7 +74,6 @@ export default {
                 })
         },
         starAdd($event) {
-            console.log($event, '  - event in todo-item');
             this.$emit('star', $event)
         }
     }

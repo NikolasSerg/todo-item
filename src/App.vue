@@ -26,9 +26,15 @@
 
             <div class="col-sm">
                 <form class="d-flex" v-on:submit.prevent="onSearch($event)">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                    <input class="form-control me-2"
+                           type="search"
+                           placeholder="Search"
+                           aria-label="Search"
+                           v-model="search"
                     >
-                    <button class="btn btn-outline-success" type="submit">
+                    <button class="btn btn-outline-success"
+                            type="submit"
+                    >
                         Search
                     </button>
                 </form>
@@ -55,7 +61,7 @@
                 <template v-if="selected === ''">
                     <TodoItem v-for="(item) in todo"
                               v-bind:prop="item"
-                               v-bind:key="item.id"
+                              v-bind:key="item.id"
                               v-on:change="onChange(item.id, $event)"
                               v-on:delete="onDelete(item.id)"
                               v-on:modal="onModal(item)"
@@ -64,7 +70,6 @@
                     </TodoItem>
                 </template>
                 <template v-else>
-                    <p>RENDER FITERED</p>
                     <TodoItem v-for="(item) in filtredArr"
                               v-bind:prop="item"
                               v-bind:key="item.id"
@@ -77,19 +82,24 @@
                 </template>
             </tbody>
         </table>
+
+        <Search ref="searchComponent"></Search>
     </div>
+
 </template>
 
 
 <script>
 import ModalWindow from './components/modal-window';
 import TodoItem from './components/todo-item';
+import Search from './components/search';
 
 export default {
     name: 'App',
     components: {
         ModalWindow,
         TodoItem,
+        Search
     },
     data() {
         return {
@@ -125,20 +135,12 @@ export default {
                 },
             ],
             selected: '',
-            modal: ''
+            modal: '',
+            search: ''
         }
-    },
-    beforeMount() {
-        this.todo.forEach(item => {
-            if(item.star !== ''){
-                console.log('must be filtered MOUNTED');
-            }
-        });
-        console.log('before mount');
     },
     computed: {
         filtredArr: function () {
-            console.log('computed done');
             let rez;
             switch (this.selected) {
                 case 'done':
@@ -171,15 +173,10 @@ export default {
             this.todo.push(newData)
         },
         onChange: function (id, data) {
-            console.log(data.check, '  - CHECK in App.js');
             this.todo.forEach((item) => {
                 if (item.id === id) {
                     item.done = data.check
                 }
-            })
-            console.log(' - change');
-            this.todo.forEach((item) => {
-                console.log(item.done, ' - done');
             })
         },
         sortArr: function (param) {
@@ -217,7 +214,6 @@ export default {
             this.todo = rez;
         },
         onEdit: function (data) {
-            console.log(data, ' - data');
             let idx = this.todo.findIndex((item) => {
                 if (item.id === data.id) {
                     return item
@@ -238,17 +234,10 @@ export default {
             }
         },
         onStar: function (id, $event) {
-            console.log(id, ' - id in App');
-            console.log($event, ' - event in App');
-
             let star = $event.index + 1;
-            console.log(star, ' - star in App');
-            // this.todo[id].star = star;
             let idx = this.todo.findIndex(i => {
                 return i.id === id
             });
-            console.log(idx, ' - idx in App');
-            console.log(this.todo[idx].id, ' - todo[idx].id in App');
             this.todo[idx].star = star;
             let newData = this.todo.sort((a, b) => {
                 if(a.star > b.star) {
@@ -258,6 +247,11 @@ export default {
                 }
             });
             this.todo = newData;
+        },
+        onSearch() {
+            console.log(this.search, ' - this.search');
+
+            this.$refs.searchComponent.modalShow();
         }
 
     }

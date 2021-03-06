@@ -34,7 +34,6 @@ export default {
         },
         onStar(index) {
             this.$emit('click', {index: index})
-            console.log(index, ' - index');
         }
     }
 }

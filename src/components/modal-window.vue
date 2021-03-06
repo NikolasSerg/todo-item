@@ -131,47 +131,27 @@ export default {
 
         }
     },
-    beforeMount() {
-        console.log(this.btn, ' - btn');
-    },
     created() {
         bus.$on('editDisabled', data => {
-            console.log(data, ' - data');
             this.editHeader = data.data.name;
             this.editDescript = data.data.descript;
             this.btn = data.btn;
             this.onModal();
         })
     },
-    beforeUpdate() {
-        // if (this.btn === 'Add') {
-        //     this.hiden = false
-        // }
-        console.log('UPDATED');
-        console.log(this.editHeader, ' - edit name');
-        console.log(this.editDescript, ' - edit descript');
-    },
     methods: {
         onModal() {
             this.hiden = !this.hiden;
-            // this.btn = 'Add';
-            console.log(this.editHeader, ' - editHeader onMOdal');
-            console.log(this.editDescript, ' - editDescript onMOdal');
-            console.log(this.btn, ' - btn onMOdal');
             if(this.btn === 'Edit') {
                 this.disabled = true;
             }
         },
         onClose() {
             this.hiden = !this.hiden;
-            console.log('CLOSE');
             this.editHeader = "";
             this.editDescript = "";
         },
         onChange(event, param) {
-            console.log("onCahnge");
-            console.log(param, ' - param');
-            console.log(event.target.value, ' - event.target.value');
             if (param === 'name') {
                 this.editHeader = event.target.value;
 
@@ -180,8 +160,6 @@ export default {
                 this.editDescript = event.target.value;
 
             }
-            console.log(this.editHeader, ' - this.editHeader');
-
         },
         onAdd() {
             if (this.newHeader !== '' && this.newDescript !== '') {
@@ -191,29 +169,18 @@ export default {
                 });
                 this.onModal();
             }
-            // console.log('onAdd on modal');
-
             this.newHeader = '';
             this.newDescript = '';
 
         },
         onEdit() {
-            // console.log('edit  tic');
-            // console.log(this.btn, ' - BTN');
-            // console.log(this.button , ' - button');
             if (this.btn === 'Edit') {
-                // console.log('yah its edit');
                 this.disabled = false;
                 this.btn = 'Save'
                 this.modalForBtn = 'modal'
                 return
             }
             if (this.btn === 'Save') {
-                // console.log('nope its save');
-                // this.modalForBtn = 'modal'
-                // console.log(this.newHeader, ' - newHeader in modal-window');
-                // console.log(this.newDescript, ' - newDescript in modal-window');
-                // console.log(this.id, ' - ID');
                 if (this.editHeader !== '' || this.editDescript !== '') {
                     this.$emit('edit', {
                         id: this.id,
@@ -226,8 +193,6 @@ export default {
                 this.editDescript = '';
 
             }
-            // console.log(this.button, ' - this.button, function onEdit in modal-window');
-
         }
     }
 }
